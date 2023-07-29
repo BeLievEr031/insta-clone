@@ -9,6 +9,7 @@ import ErrorHandler from "./middlewares/error.handler"
 import AsyncHandler from "./utils/AsyncHandler"
 import { IRequest, IResponse } from "./types"
 import ApiError from "./utils/ApiError"
+import { AuthRoute } from "./routes"
 dotenv.config();
 
 const app = express();
@@ -43,6 +44,9 @@ app.use(cookieParser())
 app.post("/", AsyncHandler((req: IRequest, res: IResponse) => {
     throw new ApiError(400, "Checking the error")
 }))
+
+// Api Routes
+app.use("/api/v1/auth", AuthRoute)
 
 app.listen(5000, () => {
     dbConnect();
