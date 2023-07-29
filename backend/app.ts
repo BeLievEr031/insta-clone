@@ -4,6 +4,11 @@ import helmet from "helmet"
 import cookieParser from "cookie-parser"
 import { rateLimit } from "express-rate-limit"
 import cors from 'cors'
+import dbConnect from "./db/dbConnect"
+import ErrorHandler from "./middlewares/error.handler"
+import AsyncHandler from "./utils/AsyncHandler"
+import { IRequest, IResponse } from "./types"
+import ApiError from "./utils/ApiError"
 dotenv.config();
 
 const app = express();
@@ -35,6 +40,13 @@ app.use(express.json({ limit: "100kb" }))
 app.use(express.urlencoded({ extended: true, limit: '100kb' }))
 app.use(cookieParser())
 
+app.post("/", AsyncHandler((req: IRequest, res: IResponse) => {
+    throw new ApiError(400, "Checking the error")
+}))
+
 app.listen(5000, () => {
+    dbConnect();
     console.log("Connected to the server.")
 })
+
+app.use(ErrorHandler)
