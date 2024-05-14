@@ -19,7 +19,21 @@ const validateRegisterUser = (req,res,next) => {
     next()
 }   
 
+const validateLoginUser = (req,res,next) => {
+    const validationSchema = joi.object({
+        email: joi.string().email().required().disallow(""),
+        password: joi.string().required().min(3).max(16),
+    })
+
+    const {error,value} = validationSchema.validate(req.body);
+    if(error){
+        return next(createError(422,error.message))
+    }
+    req.body = value;
+    next()
+}   
+
 
 // "alkdjks"
 
-export { validateRegisterUser };
+export { validateRegisterUser,validateLoginUser };
