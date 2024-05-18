@@ -15,7 +15,6 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        select:false
     },
     fullName: {
         type: String,
@@ -31,7 +30,15 @@ const userSchema = new mongoose.Schema({
     coverPhoto: {
         type: String,
         default: 'default-cover-photo.jpg'
-    }
+    },
+    refreshToken: {
+        type: String,
+        default: null
+    },
+    accessToken: {
+        type: String,
+        default: null
+    },
 }, {
     timestamps: true
 });
