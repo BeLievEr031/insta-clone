@@ -11,9 +11,7 @@ const generateCookies = (payload) => {
 
 }
 
-
 const verifyToken = async (token) => {
-    console.log(token);
     return await jwt.decode(token, config.JWT_ACCESS_TOKEN_SECRET);
 }
 

@@ -13,7 +13,6 @@ const auth = asyncHandler(async (req, res, next) => {
     }
 
     const isValid = await verifyToken(accessToken);
-    console.log(isValid);
     if (!isValid) {
         return next(createError(422, "invalid tokens."))
     }

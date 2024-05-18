@@ -4,6 +4,7 @@ import config from "./config/config.js";
 import dbConnect from "./dbConnect/dbConnect.js";
 import userRouter from "./routes/user.routes.js";
 import cookieParser from "cookie-parser";
+import friendRouter from "./routes/friend.routes.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cookieParser())
 
 // @All routes
 app.use("/api/v1/user",userRouter)
+app.use("/api/v1/friend",friendRouter)
 
 
 // @Global middleware
