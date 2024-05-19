@@ -60,7 +60,7 @@ const refreshToken = asyncHandler(async (req, res, next) => {
     const user = await UserModel.findOne({ email: isValid.email, tokenFromClient }).select("+password")
 
     if (!user) {
-        return next(createError(422, "invalid user."))
+        return next(createError(404, "invalid user."))
     }
 
     const payload = {
