@@ -38,7 +38,7 @@ const sendFriendRequest = asyncHandler(async (req, res, next) => {
 })
 
 const acceptRejectFriend = asyncHandler(async (req, res, next) => {
-    const { _id: senderID } = req.user;
+    const { _id } = req.user;
     const { id: friendReqID } = req.params;
     const { type } = req.query;
 
@@ -52,14 +52,19 @@ const acceptRejectFriend = asyncHandler(async (req, res, next) => {
         return next(createError(422, "invalid type."))
     }
 
+
     if (!friendReqID) {
         return next(createError(422, "friend req id required."))
     }
 
-    const isValidFriendReq = await FriendModel.findOne({ senderID, _id: friendReqID });
+    const isValidFriendReq = await FriendModel.findOne({ $or: [{ senderID: _id }, { receiverID: _id }], _id: friendReqID });
 
     if (!isValidFriendReq) {
         return next(createError(404, "Ghante ka friend request."))
+    }
+
+    if(type === "accept" && _id.toString() === isValidFriendReq.senderID.toString()){
+        return next(createError(409, "You can not accept the friend request."))
     }
 
     if (type === "accept") {
@@ -73,13 +78,12 @@ const acceptRejectFriend = asyncHandler(async (req, res, next) => {
 
 })
 
-
 const fetchFriends = asyncHandler(async (req, res) => {
-    const { page, limit,sort } = req.query;
+    const { page, limit, sort } = req.query;
     const friends = await UserModel.find({}).skip((page - 1) * 10).limit(limit).sort(sort).
-    select("-refreshToken -accessToken -password -createdAt -__v -updatedAt -coverPhoto -bio")
+        select("-refreshToken -accessToken -password -createdAt -__v -updatedAt -coverPhoto -bio")
 
-    res.status(200).json(new ApiResponse(friends,"Friends fetched."))
+    res.status(200).json(new ApiResponse(friends, "Friends fetched."))
 
 })
 
