@@ -1,6 +1,11 @@
 import jwt from "jsonwebtoken"
 import config from "../config/config.js"
 import createError from "http-errors"
+import asyncHandler from "express-async-handler"
+import path from "path"
+import cloudinary from "../config/cloudinary.js"
+import fs from "fs"
+
 const generateCookies = (payload) => {
     if (!payload || typeof payload !== "object") {
         throw createError(422, "Payload required.")
@@ -28,6 +33,34 @@ const checkTokenExpiry = (time) => {
     }
 }
 
+const fileUploader = async (file) => {
+    if (!file) {
+        throw createError(422, "File required.")
+    }
+
+    const uploadPath = path.join(process.cwd(), 'uploads', file.name);
+    return new Promise((resolve, reject) => {
+        file.mv(uploadPath, async (err) => {
+            if (err) {
+                throw createError(422, err.message)
+            } else {
+                try {
+                    const cloudinaryResult = await cloudinary.uploader.upload(uploadPath, { folder: "insta-clone" });
+                    fs.unlink(uploadPath, (err) => {
+                        if (err) {
+                            throw createError(500, err.message)
+                        }
+                        console.log("File deleted.");
+                    })
+                    resolve(cloudinaryResult)
+                } catch (error) {
+                    reject(error)
+                }
+            }
+        });
+    })
+
+}
 
 
-export { generateCookies, verifyToken, checkTokenExpiry }
+export { generateCookies, verifyToken, checkTokenExpiry, fileUploader }

@@ -1,7 +1,11 @@
 import mongoose, { model } from "mongoose";
 
 const postSchema = new mongoose.Schema({
-    file: {
+    userid: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"UserModel"
+    },
+    posturl: {
         type: String,
         required: true
     },
