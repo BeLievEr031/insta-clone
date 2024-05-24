@@ -62,5 +62,25 @@ const fileUploader = async (file) => {
 
 }
 
+const fileRemover = async (key) => {
 
-export { generateCookies, verifyToken, checkTokenExpiry, fileUploader }
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!key) {
+                throw createError(422, "Key required.")
+            }
+            // ezca5divayrzdbz1nq6h publicKey
+            await cloudinary.api.delete_resources([`insta-clone/${key}`],
+                { type: 'upload', resource_type: 'image' })
+
+            resolve(true)
+        } catch (error) {
+            reject(false)
+            throw createError(409, error.message)
+        }
+    })
+
+}
+
+
+export { generateCookies, verifyToken, checkTokenExpiry, fileUploader, fileRemover }
