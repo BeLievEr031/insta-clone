@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import friendRouter from "./routes/friend.routes.js";
 import fileUpload from "express-fileupload";
 import socialRouter from "./routes/social.routes.js";
+import commentRouter from "./routes/comment.routes.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(fileUpload());
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/friend", friendRouter)
 app.use("/api/v1/social", socialRouter)
+app.use("/api/v1/comment", commentRouter)
 
 
 // @Global middleware
